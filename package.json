@@ -1,5 +1,5 @@
 {
-  "name": "@scalableminds/chatroom",
+  "name": "inchat/chat-client",
   "version": "0.12.0",
   "license": "AGPL-3.0",
   "dependencies": {
