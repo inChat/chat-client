@@ -1,0 +1,41 @@
+{
+  "name": "@scalableminds/chatroom",
+  "version": "0.12.0",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "core-js": "^3.9.0",
+    "date-fns": "^2.0.1",
+    "emoji-js": "^3.5.0",
+    "lodash.isequal": "^4.5.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-icons": "^3.2.1",
+    "react-markdown": "^3.3.0",
+    "remark-breaks": "^1.0.0",
+    "unfetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-syntax-class-properties": "^7.2.0",
+    "@babel/plugin-transform-flow-strip-types": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "flow-bin": "^0.106.3",
+    "http-server": "^0.11.1",
+    "node-sass": "^4.8.3",
+    "parcel-bundler": "^1.12.3",
+    "prettier": "^1.14.2",
+    "sass": "^1.32.8"
+  },
+  "scripts": {
+    "build": "parcel build src/index.js --out-file Chatroom.js --out-dir ./dist/  --public-url /static/chat-client/dist/",
+    "watch": "parcel watch src/index.js --out-file Chatroom.js --out-dir ./dist/  --public-url /dist",
+    "flow": "flow",
+    "pretty": "prettier --write src/*",
+    "prepare": "yarn build",
+    "serve": "http-server"
+  },
+  "main": "dist/Chatroom.js"
+}

@@ -1,0 +1,13 @@
+.cache
+dist
+node_modules
+yarn-error.log
+__pycache__
+.vscode
+devnotes.md
+chatroom.zip
+resources.zip
+assets/
+upbuild.sh
+src/Chatroom.scss.effs
+resources/

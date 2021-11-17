@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="./dist/Chatroom.css">
+    <link rel="stylesheet" type="text/css" href="./index.css">
+    <title>Chatroom Debugger</title>
+  </head>
+  <body>
+    <div class="chat-container"></div>
+    <script src="./dist/Chatroom.js"></script>
+    <script type="text/javascript">
+      window.chatroom = new window.DebugChatroom({
+        title: "Chat with a bot",
+        container: document.querySelector(".chat-container"),
+        welcomeMessage: "Hallo! How can I help you?",
+        startMessage: "Hi!",
+        host: "http://localhost:5005",
+        rasaToken: "mydevelopmentsecret",
+        recoverHistory: true,
+        disableForm: true
+        // speechRecognition: "en-US",
+      });
+
+      const events = [{
+        "event": "slot", "name": "deployment",
+        "value": "local-deployment", "timestamp": new Date() - 0
+      }];
+
+      //window.chatroom.addEvents(events, function(){ console.log("Complete"); })
+    </script>
+  </body>
+</html>

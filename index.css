@@ -1,0 +1,18 @@
+/* Deployment Specific Styles */
+
+.chat-demo-button {
+  border-radius: 3px;
+  color: #343d4e;
+  border: 2px solid #343d4e;
+  padding: 5px 10px;
+  background-color: white;
+  outline: none;
+  font-size: 12px;
+  cursor: pointer;
+}
+.chat-demo-button:hover {
+  background-color: rgba(52, 61, 78, 0.3);
+}
+.chat-demo-button:active {
+  background-color: rgba(52, 61, 78, 0.8);
+}
