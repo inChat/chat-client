@@ -88,12 +88,3 @@ export const appendEvents = (events:Array<Object>, requestOptions:?Object, host:
     );
   }
 }
-
-export const fetchDefinition = (definitionUrl:string, requestOptions:?Object): Promise<Object>  => {
-  const fetchOptions = Object.assign({}, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" }
-  }, requestOptions);
-
-  return fetch(definitionUrl, fetchOptions).then(res => res.json());
-};

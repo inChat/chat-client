@@ -13,7 +13,6 @@ import classnames from "classnames";
 
 // $FlowFixMe
 import "./Chatroom.scss";
-import "./Project.scss";
 
 import { uuidv4 } from "./utils";
 import Message, { MessageTime } from "./Message";
@@ -78,6 +77,7 @@ type ChatroomProps = {
   messages: Array<ChatMessage>,
   title: string,
   isOpen: boolean,
+  definition: Object,
   waitingForBotResponse: boolean,
   speechRecognition: ?string,
   onButtonClick: (message: string, payload: string) => *,
@@ -231,7 +231,7 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
     return (
       <div className={classnames("project chatroom", isOpen ? "open" : "closed")}>
         <header className="">
-          <h1 className="logo">holding the ocean</h1>
+          <h1 className="logo">{this.props.definition.title || "chatbot title"}</h1>
         </header>
         <div className="chats" ref={this.chatsRef}>
           {messageGroups.map((group, i) => (
@@ -262,6 +262,9 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
             <input
               disabled={waitingForBotResponse || isButtonMsg || disableForm}
               type="text"
+              name="message"
+              autoComplete="off"
+              aria-label="Message text input"
               ref={this.inputRef}
             />
             <input type="submit" value="Send" disabled={waitingForBotResponse || isButtonMsg || disableForm} />

@@ -1,39 +1,130 @@
 $chromeColor: #1C1C1C;
-$hotpink: #E6007C;
-$yellow: rgb(249, 240, 0);
-$easeYellow: rgba(249, 240, 0, 0.75);
 $white: white;
-$blue: rgb(1, 167, 245);
-$easeBlue: rgba(1, 167, 245, 0.75);
-$userPink: rgba(228, 37, 136, 0.5);
-$bubbleColor: $blue;
 $textColor: rgb(28, 28, 28);
-$linkColor: $hotpink;
+$textColour: $textColor;
 $backgroundColor: rgb(250,250,250);
+
 $grey: rgb(236, 240, 243);
-$darkGrey: #555;
-$selectorWidth: 90vw;
 $lightGrey: #eaeaea;
-$green: #9bad3b;
-$darkGreen: rgba(51, 128, 23, 0.75);
+$darkGrey: #555;
+
+$selectorWidth: 90vw;
 $background: #fbfbfb;
 $transparentBackground: #fbfbfbe8;
-$darkPurple: #32009c;
-$lightPurple: #7e51de;
-$peachOrange: #ef7651;
-$textColour: #333;
-$lightBlue: #1494ad;
-$darkerBlue: #50a4b4;
-$skyRed: #ff6868;
-$startGradient: #1494ad;
-$endGradient: #1494ad;
+$userColor: #e51937;
+$userText: white;
+$linkColor: #114578;
+$startGradient: #114578;
+$endGradient: #114578;
 
+@font-face {
+  font-family: "Nunito Sans";
+  src: url("../assets/fonts/nunito-sans.regular.ttf") format("ttf");
+}
+
+@keyframes fadein {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeout {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes movegradient {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes fadeinout {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes animateIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(-8px);
+  }
+
+  100% { opacity: 1; }
+}
+
+@mixin transition {
+  opacity: 0;
+  -ms-animation: animateIn 300ms ease-out;
+  -o-animation: animateIn 300ms ease-out;
+  -moz-animation: animateIn 300ms ease-out;
+  -webkit-animation: animateIn 300ms ease-out;
+  animation: animateIn 300ms ease-out;
+  animation-fill-mode: forwards;
+}
+
+@mixin slowTransition {
+  opacity: 0;
+  -ms-animation: fadein 800ms ease-out;
+  -o-animation: fadein 800ms ease-out;
+  -moz-animation: fadein 800ms ease-out;
+  -webkit-animation: fadein 800ms ease-out;
+  animation: fadein 800ms ease-out;
+  animation-fill-mode: forwards;
+}
+
+@mixin slowFadeIn {
+  opacity: 0;
+  -ms-animation: fadein 800ms ease-out;
+  -o-animation: fadein 800ms ease-out;
+  -moz-animation: fadein 800ms ease-out;
+  -webkit-animation: fadein 800ms ease-out;
+  animation: fadein 800ms ease-out;
+  animation-fill-mode: forwards;
+}
+
+@mixin slowFadeOut {
+  opacity: 1;
+  -ms-animation: fadeout 800ms ease-out;
+  -o-animation: fadeout 800ms ease-out;
+  -moz-animation: fadeout 800ms ease-out;
+  -webkit-animation: fadeout 800ms ease-out;
+  animation: fadeout 800ms ease-out;
+  animation-fill-mode: forwards;
+}
+
+@mixin logoBackground {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='114' height='48' viewBox='0 0 114 48'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFF' fill-rule='nonzero'%3E%3Cpath d='M48.45 63.15v27.1c0 1.333-.142 2.483-.425 3.45-.283.967-.767 1.775-1.45 2.425-.683.65-1.608 1.133-2.775 1.45-1.167.317-2.65.475-4.45.475-.833 0-1.583-.067-2.25-.2V92c.367.133.867.2 1.5.2.733 0 1.375-.142 1.925-.425.55-.283.825-.908.825-1.875V63.15h7.1zm13.25 0v14.6c0 2.133.333 3.725 1 4.775.667 1.05 1.85 1.575 3.55 1.575 1.933 0 3.333-.575 4.2-1.725.867-1.15 1.3-3.042 1.3-5.675V63.15h7.1V89H72.1v-3.6h-.15c-.9 1.5-2.067 2.583-3.5 3.25-1.433.667-2.9 1-4.4 1-1.9 0-3.458-.25-4.675-.75-1.217-.5-2.175-1.208-2.875-2.125-.7-.917-1.192-2.033-1.475-3.35-.283-1.317-.425-2.775-.425-4.375v-15.9h7.1zm64.75-.7c2.033 0 3.875.325 5.525.975 1.65.65 3.058 1.567 4.225 2.75 1.167 1.183 2.067 2.617 2.7 4.3.633 1.683.95 3.558.95 5.625s-.317 3.933-.95 5.6c-.633 1.667-1.533 3.092-2.7 4.275-1.167 1.183-2.575 2.092-4.225 2.725-1.65.633-3.492.95-5.525.95-2.033 0-3.867-.317-5.5-.95s-3.033-1.542-4.2-2.725c-1.167-1.183-2.067-2.608-2.7-4.275-.633-1.667-.95-3.533-.95-5.6 0-2.067.317-3.942.95-5.625.633-1.683 1.533-3.117 2.7-4.3 1.167-1.183 2.567-2.1 4.2-2.75 1.633-.65 3.467-.975 5.5-.975zm-27.4 0c1.9 0 3.458.258 4.675.775 1.217.517 2.175 1.233 2.875 2.15.7.917 1.192 2.033 1.475 3.35.283 1.317.425 2.775.425 4.375V89h-7.1V74.4c0-2.133-.333-3.725-1-4.775-.667-1.05-1.85-1.575-3.55-1.575-1.933 0-3.333.575-4.2 1.725-.867 1.15-1.3 3.042-1.3 5.675V89h-7.1V63.15H91v3.6h.15c.9-1.5 2.067-2.592 3.5-3.275 1.433-.683 2.9-1.025 4.4-1.025zm27.4 5.35c-1.2 0-2.2.242-3 .725-.8.483-1.442 1.108-1.925 1.875-.483.767-.825 1.65-1.025 2.65-.2 1-.3 2.017-.3 3.05s.1 2.042.3 3.025c.2.983.542 1.867 1.025 2.65.483.783 1.125 1.408 1.925 1.875.8.467 1.8.7 3 .7s2.208-.233 3.025-.7c.817-.467 1.467-1.092 1.95-1.875.483-.783.825-1.667 1.025-2.65.2-.983.3-1.992.3-3.025s-.1-2.05-.3-3.05c-.2-1-.542-1.883-1.025-2.65-.483-.767-1.133-1.392-1.95-1.875-.817-.483-1.825-.725-3.025-.725zM145 51c3.314 0 6 2.686 6 6s-2.686 6-6 6-6-2.686-6-6 2.686-6 6-6zm0 2c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm-96.55.3v5.85h-7.1V53.3h7.1z' transform='translate(-37.000000, -51.000000)'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+}
+
+@mixin compass {
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='compass'%3E%3Cpath id='Combined Shape' fill-rule='evenodd' clip-rule='evenodd' d='M0 7C0 3.13405 3.13405 0 7 0C10.8641 0.00432944 13.9957 3.13587 14 7C14 10.866 10.866 14 7 14C3.13405 14 0 10.866 0 7ZM0.466667 7C0.466667 10.6082 3.39176 13.5333 7 13.5333C10.6065 13.5292 13.5292 10.6065 13.5333 7C13.5333 3.39176 10.6082 0.466667 7 0.466667C3.39176 0.466667 0.466667 3.39176 0.466667 7ZM1.16667 7C1.16667 3.77834 3.77834 1.16667 7 1.16667C10.2202 1.17031 12.8297 3.77982 12.8333 7C12.8333 10.2217 10.2217 12.8333 7 12.8333C3.77834 12.8333 1.16667 10.2217 1.16667 7ZM1.63333 7C1.63333 9.96395 4.03605 12.3667 7 12.3667C9.96258 12.3634 12.3634 9.96258 12.3667 7C12.3667 4.03605 9.96395 1.63333 7 1.63333C4.03605 1.63333 1.63333 4.03605 1.63333 7ZM10.1565 3.52586C10.2478 3.47402 10.3623 3.4894 10.4365 3.56346C10.5113 3.63797 10.5267 3.75339 10.4741 3.84487L8.09591 8.0099C8.09514 8.01112 8.09409 8.01204 8.09305 8.01296L8.09304 8.01297L8.09303 8.01297C8.09194 8.01393 8.09086 8.01488 8.0901 8.01616C8.06709 8.04294 8.04214 8.06789 8.01548 8.09079C8.01408 8.09158 8.01311 8.09272 8.01213 8.09387C8.01126 8.09489 8.01039 8.09591 8.00921 8.09671L3.84419 10.4741C3.75282 10.5262 3.63797 10.5107 3.56357 10.4364C3.48929 10.362 3.4738 10.2472 3.52586 10.1558L5.90409 5.9901C5.90487 5.98888 5.90592 5.98795 5.90696 5.98703C5.90806 5.98607 5.90914 5.98512 5.9099 5.98384C5.93291 5.95706 5.95786 5.93211 5.98452 5.90921L5.98572 5.90838L5.98648 5.90768L5.98788 5.90613L5.98788 5.90612C5.98874 5.90511 5.98962 5.90409 5.99079 5.90329L10.1565 3.52586ZM6.1577 6.48787L4.35495 9.64505L7.51338 7.8423L6.1577 6.48787ZM7.8423 7.51338L6.48901 6.15998L9.64619 4.35723L7.8423 7.51338ZM3.26667 6.76667H2.33333C2.20448 6.76667 2.1 6.87114 2.1 7C2.1 7.12886 2.20448 7.23333 2.33333 7.23333H3.26667C3.39552 7.23333 3.5 7.12886 3.5 7C3.5 6.87114 3.39552 6.76667 3.26667 6.76667ZM10.7333 6.76667H11.6667C11.7955 6.76667 11.9 6.87114 11.9 7C11.9 7.12886 11.7955 7.23333 11.6667 7.23333H10.7333C10.6045 7.23333 10.5 7.12886 10.5 7C10.5 6.87114 10.6045 6.76667 10.7333 6.76667ZM7 3.5C7.12886 3.5 7.23333 3.39552 7.23333 3.26667V2.33333C7.23333 2.20448 7.12886 2.1 7 2.1C6.87114 2.1 6.76667 2.20448 6.76667 2.33333V3.26667C6.76667 3.39552 6.87114 3.5 7 3.5ZM6.76667 10.7333C6.76667 10.6045 6.87114 10.5 7 10.5C7.12886 10.5 7.23333 10.6045 7.23333 10.7333V11.6667C7.23333 11.7955 7.12886 11.9 7 11.9C6.87114 11.9 6.76667 11.7955 6.76667 11.6667V10.7333Z' fill='white'/%3E%3C/g%3E%3C/svg%3E%0A");
+}
+
+@mixin gradient {
+  background: $startGradient;
+  background: linear-gradient(6deg, $startGradient 10%, $endGradient 90%);
+  color: white;
+}
+
+@mixin userStyle {
+  background: $userColor;
+  color: $userText;
+}
+
+@mixin variedGradient {
+  background: $startGradient;
+  background: linear-gradient(20deg, $startGradient 0%, $endGradient 150%);
+  color: white;
+}
 
 body {
   background-color: #f3f0f0;
   margin: 0; padding: 0;
-  font-family: "Raleway",sans-serif;
+  font-family: "Nunito Sans",sans-serif;
 }
+
+header, .project.chatroom, .chatroom, input, button { font-family: "Nunito Sans", sans-serif; }
 
 .chat-container .chatroom div.chats.prevent-scroll,
 .prevent-scroll { overflow: hidden; }
@@ -94,7 +185,7 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border-bottom: 0.3em solid $blue;
+    border-bottom: 0.3em solid silver;
   }
 
   .chats {
@@ -105,19 +196,6 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-
-    /*
-    .chat.right::before {
-      box-sizing: border-box;
-      display: block;
-      width: 75%;
-      height: 5px;
-      content: "";
-      position: absolute;
-      bottom: -9px;
-      right: 0;
-      background-color: $hotpink;
-    }*/
 
     li.locate-container {
       position: relative;
@@ -147,7 +225,6 @@ body {
       clear: both;
       margin: 10px 0 0 0;
       max-width: 68%;
-      background-color: $easeBlue;
 
       img {
         max-width: 100%;
@@ -163,7 +240,6 @@ body {
         float: right;
         clear: both;
         border-bottom-right-radius: 0;
-        background-color: $userPink;
       }
 
       .text {
@@ -324,9 +400,8 @@ body {
       border: none;
       height: auto;
       opacity: 1;
-      border-top: 0.3em solid $darkGrey;
-      border-radius: 0px;
       width: 100%;
+      border-radius: 1.5rem;
     }
 
     input[type="text"] {
@@ -342,17 +417,15 @@ body {
       &:focus:enabled {
         box-shadow: none;
         opacity: 1;
-        border-top: 0.3em solid $hotpink;
+        border-top: 0.3em solid $linkColor;
       }
     }
 
     input[type="submit"] {
-      background: $yellow;
-      color: $textColor;
+      @include userStyle;
       line-height: 2em;
       text-align: center;
       box-shadow: none;
-      border-radius: 0;
       cursor: pointer;
       transition: all 0.3s ease;
       white-space: nowrap;
@@ -364,10 +437,8 @@ body {
       margin: 0;
 
       &:hover:enabled {
-        background: $hotpink;
-        color: $white;
-        opacity: 1;
-        border-top: 0.3em solid $hotpink;
+        opacity: 0.8;
+        border: 0.1em solid $userColor;
       }
 
       &:disabled, &:hover:disabled {
@@ -393,7 +464,7 @@ body {
     transition: all 0.3s ease;
 
     &:hover:enabled {
-      background: $bubbleColor;
+      background: $userColor;
     }
   }
 
@@ -714,111 +785,6 @@ li.carousel {
   .right-arrow { right: -15px; }
 }
 
-
-@font-face {
-  font-family: "Raleway";
-  src: url("../assets/fonts/raleway.woff2") format("woff2");
-}
-
-@keyframes fadein {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-@keyframes fadeout {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes movegradient {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes fadeinout {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes animateIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.6) translateY(-8px);
-  }
-
-  100% { opacity: 1; }
-}
-
-@mixin transition {
-  opacity: 0;
-  -ms-animation: animateIn 300ms ease-out;
-  -o-animation: animateIn 300ms ease-out;
-  -moz-animation: animateIn 300ms ease-out;
-  -webkit-animation: animateIn 300ms ease-out;
-  animation: animateIn 300ms ease-out;
-  animation-fill-mode: forwards;
-}
-
-@mixin slowTransition {
-  opacity: 0;
-  -ms-animation: fadein 800ms ease-out;
-  -o-animation: fadein 800ms ease-out;
-  -moz-animation: fadein 800ms ease-out;
-  -webkit-animation: fadein 800ms ease-out;
-  animation: fadein 800ms ease-out;
-  animation-fill-mode: forwards;
-}
-
-@mixin slowFadeIn {
-  opacity: 0;
-  -ms-animation: fadein 800ms ease-out;
-  -o-animation: fadein 800ms ease-out;
-  -moz-animation: fadein 800ms ease-out;
-  -webkit-animation: fadein 800ms ease-out;
-  animation: fadein 800ms ease-out;
-  animation-fill-mode: forwards;
-}
-
-@mixin slowFadeOut {
-  opacity: 1;
-  -ms-animation: fadeout 800ms ease-out;
-  -o-animation: fadeout 800ms ease-out;
-  -moz-animation: fadeout 800ms ease-out;
-  -webkit-animation: fadeout 800ms ease-out;
-  animation: fadeout 800ms ease-out;
-  animation-fill-mode: forwards;
-}
-
-@mixin logoBackground {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='114' height='48' viewBox='0 0 114 48'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFF' fill-rule='nonzero'%3E%3Cpath d='M48.45 63.15v27.1c0 1.333-.142 2.483-.425 3.45-.283.967-.767 1.775-1.45 2.425-.683.65-1.608 1.133-2.775 1.45-1.167.317-2.65.475-4.45.475-.833 0-1.583-.067-2.25-.2V92c.367.133.867.2 1.5.2.733 0 1.375-.142 1.925-.425.55-.283.825-.908.825-1.875V63.15h7.1zm13.25 0v14.6c0 2.133.333 3.725 1 4.775.667 1.05 1.85 1.575 3.55 1.575 1.933 0 3.333-.575 4.2-1.725.867-1.15 1.3-3.042 1.3-5.675V63.15h7.1V89H72.1v-3.6h-.15c-.9 1.5-2.067 2.583-3.5 3.25-1.433.667-2.9 1-4.4 1-1.9 0-3.458-.25-4.675-.75-1.217-.5-2.175-1.208-2.875-2.125-.7-.917-1.192-2.033-1.475-3.35-.283-1.317-.425-2.775-.425-4.375v-15.9h7.1zm64.75-.7c2.033 0 3.875.325 5.525.975 1.65.65 3.058 1.567 4.225 2.75 1.167 1.183 2.067 2.617 2.7 4.3.633 1.683.95 3.558.95 5.625s-.317 3.933-.95 5.6c-.633 1.667-1.533 3.092-2.7 4.275-1.167 1.183-2.575 2.092-4.225 2.725-1.65.633-3.492.95-5.525.95-2.033 0-3.867-.317-5.5-.95s-3.033-1.542-4.2-2.725c-1.167-1.183-2.067-2.608-2.7-4.275-.633-1.667-.95-3.533-.95-5.6 0-2.067.317-3.942.95-5.625.633-1.683 1.533-3.117 2.7-4.3 1.167-1.183 2.567-2.1 4.2-2.75 1.633-.65 3.467-.975 5.5-.975zm-27.4 0c1.9 0 3.458.258 4.675.775 1.217.517 2.175 1.233 2.875 2.15.7.917 1.192 2.033 1.475 3.35.283 1.317.425 2.775.425 4.375V89h-7.1V74.4c0-2.133-.333-3.725-1-4.775-.667-1.05-1.85-1.575-3.55-1.575-1.933 0-3.333.575-4.2 1.725-.867 1.15-1.3 3.042-1.3 5.675V89h-7.1V63.15H91v3.6h.15c.9-1.5 2.067-2.592 3.5-3.275 1.433-.683 2.9-1.025 4.4-1.025zm27.4 5.35c-1.2 0-2.2.242-3 .725-.8.483-1.442 1.108-1.925 1.875-.483.767-.825 1.65-1.025 2.65-.2 1-.3 2.017-.3 3.05s.1 2.042.3 3.025c.2.983.542 1.867 1.025 2.65.483.783 1.125 1.408 1.925 1.875.8.467 1.8.7 3 .7s2.208-.233 3.025-.7c.817-.467 1.467-1.092 1.95-1.875.483-.783.825-1.667 1.025-2.65.2-.983.3-1.992.3-3.025s-.1-2.05-.3-3.05c-.2-1-.542-1.883-1.025-2.65-.483-.767-1.133-1.392-1.95-1.875-.817-.483-1.825-.725-3.025-.725zM145 51c3.314 0 6 2.686 6 6s-2.686 6-6 6-6-2.686-6-6 2.686-6 6-6zm0 2c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm-96.55.3v5.85h-7.1V53.3h7.1z' transform='translate(-37.000000, -51.000000)'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
-  background-repeat: no-repeat;
-}
-
-@mixin compass {
-  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg id='compass'%3E%3Cpath id='Combined Shape' fill-rule='evenodd' clip-rule='evenodd' d='M0 7C0 3.13405 3.13405 0 7 0C10.8641 0.00432944 13.9957 3.13587 14 7C14 10.866 10.866 14 7 14C3.13405 14 0 10.866 0 7ZM0.466667 7C0.466667 10.6082 3.39176 13.5333 7 13.5333C10.6065 13.5292 13.5292 10.6065 13.5333 7C13.5333 3.39176 10.6082 0.466667 7 0.466667C3.39176 0.466667 0.466667 3.39176 0.466667 7ZM1.16667 7C1.16667 3.77834 3.77834 1.16667 7 1.16667C10.2202 1.17031 12.8297 3.77982 12.8333 7C12.8333 10.2217 10.2217 12.8333 7 12.8333C3.77834 12.8333 1.16667 10.2217 1.16667 7ZM1.63333 7C1.63333 9.96395 4.03605 12.3667 7 12.3667C9.96258 12.3634 12.3634 9.96258 12.3667 7C12.3667 4.03605 9.96395 1.63333 7 1.63333C4.03605 1.63333 1.63333 4.03605 1.63333 7ZM10.1565 3.52586C10.2478 3.47402 10.3623 3.4894 10.4365 3.56346C10.5113 3.63797 10.5267 3.75339 10.4741 3.84487L8.09591 8.0099C8.09514 8.01112 8.09409 8.01204 8.09305 8.01296L8.09304 8.01297L8.09303 8.01297C8.09194 8.01393 8.09086 8.01488 8.0901 8.01616C8.06709 8.04294 8.04214 8.06789 8.01548 8.09079C8.01408 8.09158 8.01311 8.09272 8.01213 8.09387C8.01126 8.09489 8.01039 8.09591 8.00921 8.09671L3.84419 10.4741C3.75282 10.5262 3.63797 10.5107 3.56357 10.4364C3.48929 10.362 3.4738 10.2472 3.52586 10.1558L5.90409 5.9901C5.90487 5.98888 5.90592 5.98795 5.90696 5.98703C5.90806 5.98607 5.90914 5.98512 5.9099 5.98384C5.93291 5.95706 5.95786 5.93211 5.98452 5.90921L5.98572 5.90838L5.98648 5.90768L5.98788 5.90613L5.98788 5.90612C5.98874 5.90511 5.98962 5.90409 5.99079 5.90329L10.1565 3.52586ZM6.1577 6.48787L4.35495 9.64505L7.51338 7.8423L6.1577 6.48787ZM7.8423 7.51338L6.48901 6.15998L9.64619 4.35723L7.8423 7.51338ZM3.26667 6.76667H2.33333C2.20448 6.76667 2.1 6.87114 2.1 7C2.1 7.12886 2.20448 7.23333 2.33333 7.23333H3.26667C3.39552 7.23333 3.5 7.12886 3.5 7C3.5 6.87114 3.39552 6.76667 3.26667 6.76667ZM10.7333 6.76667H11.6667C11.7955 6.76667 11.9 6.87114 11.9 7C11.9 7.12886 11.7955 7.23333 11.6667 7.23333H10.7333C10.6045 7.23333 10.5 7.12886 10.5 7C10.5 6.87114 10.6045 6.76667 10.7333 6.76667ZM7 3.5C7.12886 3.5 7.23333 3.39552 7.23333 3.26667V2.33333C7.23333 2.20448 7.12886 2.1 7 2.1C6.87114 2.1 6.76667 2.20448 6.76667 2.33333V3.26667C6.76667 3.39552 6.87114 3.5 7 3.5ZM6.76667 10.7333C6.76667 10.6045 6.87114 10.5 7 10.5C7.12886 10.5 7.23333 10.6045 7.23333 10.7333V11.6667C7.23333 11.7955 7.12886 11.9 7 11.9C6.87114 11.9 6.76667 11.7955 6.76667 11.6667V10.7333Z' fill='white'/%3E%3C/g%3E%3C/svg%3E%0A");
-}
-
-@mixin gradient {
-  background: $startGradient;
-  background: linear-gradient(6deg, $startGradient 10%, $endGradient 90%);
-  color: white;
-}
-
-@mixin shiftedGradient {
-  background: $startGradient;
-  background: linear-gradient(20deg, $startGradient 0%, $endGradient 150%);
-  color: white;
-}
-
-@mixin variedGradient {
-  background: $startGradient;
-  background: linear-gradient(20deg, $startGradient 0%, $endGradient 150%);
-  color: white;
-}
-
-.chatroom, input, button { font-family: "Raleway", sans-serif; }
-
 div.splash {
   background-image: url("../assets/default-splash.svg");
   background-repeat: no-repeat;
@@ -855,7 +821,7 @@ div.splash {
 
     button.agree {
       opacity: 1;
-      @include shiftedGradient;
+      @include userStyle;
     }
 
     .content {}
@@ -1026,14 +992,16 @@ div.project.chatroom {
 
     .chat-button {
       padding: 0.9rem 1rem;
-      @include shiftedGradient;
       box-shadow: 1px 1px 1px silver;
       border: none;
       border-radius: 1rem;
+      @include userStyle;
     }
   }
 
-  .chat.right { @include shiftedGradient; }
+  .chat.right {
+    @include userStyle;
+  }
 
   .chat.right a {
     color: white;
@@ -1068,15 +1036,15 @@ div.project.chatroom {
 
   .sticker-control {
     ul li:hover {
-      box-shadow: 1px 1px 4px 1px $darkerBlue;
+      box-shadow: 1px 1px 4px 1px $userColor;
       border-radius: 1rem;
     }
   }
 
   button.toggle-sticker {
     border: none;
-    @include shiftedGradient;
     overflow: hidden;
+    @include userStyle;
     &:hover:enabled {
       @include variedGradient;
       opacity: 0.8;
@@ -1096,30 +1064,16 @@ div.project.chatroom {
 
   &.show-stickers {
     button.toggle-sticker {
-      box-shadow: 0px 0px 3px $darkerBlue;
+      box-shadow: 0px 0px 3px $userColor;
     }
     button.toggle-sticker:hover {
-      box-shadow: 0px 0px 0px $darkerBlue;
+      box-shadow: 0px 0px 0px $userColor;
     }
-  }
-
-  input[type="text"], input[type="submit"] {
-    border-radius: 1.5rem;
-    border: 0.1em solid $darkerBlue;
   }
 
   input[type="text"]:focus:enabled {
-    border: 0.1em solid $darkerBlue;
+    border: 0.1em solid $userColor;
     background-color: white;
-  }
-
-  input[type="submit"] {
-    @include shiftedGradient;
-    &:hover:enabled {
-      @include variedGradient;
-      opacity: 0.8;
-      border: 0.1em solid $darkerBlue;
-    }
   }
 
   .selector {
@@ -1142,7 +1096,7 @@ div.project.chatroom {
       background-color: $lightGrey;
       color: white;
       &:hover {
-        @include shiftedGradient;
+        @include userStyle;
       }
     }
   }

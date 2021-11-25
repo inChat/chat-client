@@ -5,12 +5,12 @@ import type { ChatMessage, MessageType } from "./Chatroom";
 import Chatroom from "./Chatroom";
 import Splash from "./Splash";
 import { sleep, uuidv4, convertEmojisToShortcodes } from "./utils";
-import { fetchTracker, extractMessages, appendEvents, fetchDefinition } from "./tracker.js";
+import { fetchTracker, extractMessages, appendEvents } from "./tracker.js";
 
 type ConnectedChatroomProps = {
   userId: string,
   host: string,
-  definitionUrl: string,
+  definition: Object,
   channel: string,
   welcomeMessage: ?string,
   startMessage: ?string,
@@ -144,11 +144,8 @@ export default class ConnectedChatroom extends Component<
   }
 
   componentDidMount() {
-    fetchDefinition(this.props.definitionUrl).then((projectDef)=>{
-      this.setState({ stickers: projectDef.data.stickers });
-    }).finally(()=>{
-      setTimeout(this.launchChat, 1000);
-    });
+    this.setState({ stickers: this.props.definition.stickers });
+    setTimeout(this.launchChat, 1000);
   }
 
   componentWillUnmount() {
@@ -368,10 +365,11 @@ export default class ConnectedChatroom extends Component<
       .sort((a, b) => a.time - b.time);
 
     if (showSplash) {
-      return (<Splash showConsentForm={this.state.showConsentForm} completeConsent={this.completeConsent} />)
+      return (<Splash definition={this.props.definition} showConsentForm={this.state.showConsentForm} completeConsent={this.completeConsent} />)
     } else {
       return (
         <Chatroom
+          definition={this.props.definition}
           messages={renderableMessages}
           title={this.state.currenttitle}
           waitingForBotResponse={waitingForBotResponse}

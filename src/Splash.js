@@ -15,7 +15,7 @@ export default class Splash extends Component {
 
   refuse = () => {
     this.setState({ endSplash: true, disable: true });
-    setTimeout(() => { window.location = "https://www.holdingtheocean.org"; }, 1800);
+    setTimeout(() => { window.location = "https://www.refuselink.org"; }, 1800); //TODO - use from definition
   }
 
   render() {
@@ -25,7 +25,7 @@ export default class Splash extends Component {
     return (
       <div className={klass}>
         <div className="splash-bg">
-          <h1 className="logo">chatbot title</h1>
+          <h1 className="logo">{this.props.definition.title}</h1>
         </div>
         { this.props.showConsentForm ? (
           <div className="consent-form">
