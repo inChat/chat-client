@@ -23,27 +23,45 @@
     <div class="chat-container"></div>
     <script src="./dist/Chatroom.js"></script>
     <script type="text/javascript">
-      window.chatroom = new window.Chatroom({
-        title: "Chatbot title",
-        container: document.querySelector(".chat-container"),
-        startMessage: "/select_point{ \"discussion_item\": \"part-1\" }",
-        channel: "inchat",
-        definitionUrl: "http://localhost:8000/api/v1/projects/7/definition/",
-        //host: "http://192.168.1.8:5006",
-        host: "http://localhost:5007",
-        rasaToken: "mydevelopmentsecret",
-        recoverHistory: true,
-        //speechRecognition: "en-GB",
-        //voiceLang: "en-GB",
-        disableForm: false
+      const events = [
+        {
+          "event": "slot", "name": "deployment",
+          "value": "13", "timestamp": new Date() - 0
+        },{
+          "event": "slot", "name": "project",
+          "value": "8", "timestamp": new Date() - 0
+        },{
+          "event": "slot", "name": "client_params",
+          "value": window.location.search.slice(1), "timestamp": new Date() - 0
+        }
+      ];
+
+      fetch("http://localhost:8000/api/v1/projects/8/definition/", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      }).then(res => res.json()).then((result) => {
+        console.log("projectDef.data");
+        console.log(result.data);
+        window.chatroom = new window.Chatroom({
+          definition: result.data,
+          title: result.data.title || "Chatbot title",
+          container: document.querySelector(".chat-container"),
+          startMessage: "/select_point{ \"discussion_item\": \"main\" }",
+          channel: "inchat",
+          deployment: { "project": 8, "deployment": 13 },
+          host: "http://localhost:5008",
+          rasaToken: "mydevelopmentsecret",
+          recoverHistory: true,
+          //speechRecognition: "en-GB",
+          //voiceLang: "en-GB",
+          disableForm: false
+        });
+        window.chatroom.addEvents(events, window.chatroom.openChat);
+      }).catch((error)=>{
+        console.error(error);
+      }).finally(()=>{
+
       });
-
-      const events = [{
-        "event": "slot", "name": "deployment",
-        "value": "testdeployment", "timestamp": new Date() - 0
-      }];
-
-      window.chatroom.addEvents(events, window.chatroom.openChat)
     </script>
   </body>
 </html>

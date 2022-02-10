@@ -105,9 +105,6 @@ class DebuggerView extends Component<DebuggerViewProps, DebuggerViewState> {
                 Bot address: <strong>{this.props.host}</strong>
               </p>
               <p>
-                Bot definition: <strong>{this.props.definition}</strong>
-              </p>
-              <p>
                 Bot channel: <strong>{this.props.channel}</strong>
               </p>
               <p>
