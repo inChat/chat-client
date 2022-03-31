@@ -40,8 +40,8 @@
         method: "GET",
         headers: { "Content-Type": "application/json" }
       }).then(res => res.json()).then((result) => {
-        console.log("projectDef.data");
-        console.log(result.data);
+        //console.log("projectDef.data");
+        //co/nsole.log(result.data);
         window.chatroom = new window.Chatroom({
           definition: result.data,
           title: result.data.title || "Chatbot title",

@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import classnames from "classnames";
 
 export default class Splash extends Component {
   state = {
@@ -22,10 +23,15 @@ export default class Splash extends Component {
     let klass = "splash";
     if (this.state.endSplash){ klass = klass + " end-splash" }
 
+    const bgStyle = { background: this.props.definition.styling["splash-background"] };
+    const logoStyle = { backgroundImage: `url("${this.props.definition.styling["splash-logo"]}")` };
     return (
       <div className={klass}>
-        <div className="splash-bg">
-          <h1 className="logo">{this.props.definition.title}</h1>
+        <div className={classnames("splash-bg", this.props.showConsentForm ? "" : "no-animation")} style={bgStyle}>
+          <h1 className="logo">
+            <div className="logo-image" style={logoStyle}></div>
+            <span>{this.props.definition.splashTitle}</span>
+          </h1>
         </div>
         { this.props.showConsentForm ? (
           <div className="consent-form">

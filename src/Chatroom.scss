@@ -849,7 +849,7 @@ div.splash-bg {
   animation-delay: 3s;
 
   h1.logo {
-    position: fixed;
+    position: relative;
     top: calc(45% - 5rem);
     text-align: center;
     width: 100%;
@@ -860,18 +860,20 @@ div.splash-bg {
     animation-delay: 2s;
   }
 
-  h1.logo::before {
-    content: ' ';
+  div.logo-image {
+    text-align: center;
     display: block;
-    width: 3rem;
-    height: 3rem;
-    background-image: url("../assets/chat-bubble.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     margin: 1.5rem auto;
     opacity: 1;
+    height: 8vh;
+    max-width: 60%;
   }
+
+  &.no-animation { animation: none; }
+  &.no-animation { h1.logo { animation: none; }  }
 }
 
 div.splash.end-splash {

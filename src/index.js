@@ -13,6 +13,7 @@ import Chatroom from "./Chatroom";
 import { noop, sleep, uuidv4, getAllUrlParams } from "./utils";
 import ConnectedChatroom from "./ConnectedChatroom";
 import DebuggerView from "./DebuggerView";
+import merge from 'lodash.merge';
 
 const USERID_STORAGE_KEY = "simple-chatroom-cid";
 
@@ -52,6 +53,17 @@ const determineSession = () => {
   return sessionUserId;
 }
 
+const parseDefinition = (definition) => {
+  const defaults = {
+    'styling': {
+      'splash-background': '#ae1f24'//,
+      //'splash-logo': "https://college-bridge.org/wp-content/uploads/2019/02/Reverse-logo.png"
+    }
+  };
+  let merged = merge(defaults, definition)
+  return merged;
+}
+
 window.Chatroom = function(options: ChatroomOptions) {
   let sessionUserId = determineSession();
 
@@ -60,7 +72,7 @@ window.Chatroom = function(options: ChatroomOptions) {
       rasaToken={options.rasaToken}
       userId={sessionUserId}
       host={options.host}
-      definition={options.definition}
+      definition={parseDefinition(options.definition)}
       channel={options.channel || "rest"}
       title={options.title || "Chat"}
       speechRecognition={options.speechRecognition}
@@ -92,7 +104,7 @@ window.DebugChatroom = function(options: ChatroomOptions) {
       rasaToken={options.rasaToken}
       userId={sessionUserId}
       host={options.host}
-      definition={options.definition}
+      definition={parseDefinition(options.definition)}
       channel={options.channel || "rest"}
       title={options.title || "Chat"}
       speechRecognition={options.speechRecognition}

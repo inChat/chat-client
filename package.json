@@ -8,6 +8,7 @@
     "date-fns": "^2.0.1",
     "emoji-js": "^3.5.0",
     "lodash.isequal": "^4.5.0",
+    "lodash.merge": "^4.6.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-icons": "^3.2.1",
