@@ -10,7 +10,9 @@ import { fetchTracker, extractMessages, appendEvents } from "./tracker.js";
 type ConnectedChatroomProps = {
   userId: string,
   host: string,
+  platformHost: string,
   definition: Object,
+  deployment: Object,
   channel: string,
   welcomeMessage: ?string,
   startMessage: ?string,
@@ -156,6 +158,40 @@ export default class ConnectedChatroom extends Component<
     if (this.messageQueueInterval != null) {
       window.clearInterval(this.messageQueueInterval);
       this.messageQueueInterval = null;
+    }
+  }
+
+  sendFile = (files, successCb, errorCb) => {
+    try {
+      const deployment = this.props.deployment.deployment;
+      const formData = new FormData();
+
+      console.log("deployment", deployment)
+      formData.append('deployment', deployment);
+      for (const file of files) {console.log("f", file);  formData.append('files',file); }
+      const attachmentUrl = `${this.props.platformHost}/api/v1/eventlogs/${this.props.userId}/attachments/`;
+
+      console.log("Sending file", attachmentUrl);
+      console.log("with formData", formData);
+
+      fetch(attachmentUrl, { method: 'POST', body: formData })
+      .then((response) => response.json())
+      .then((result) => {
+        let msg = '';
+        for (const attachment of result.data){
+          msg = msg += `![User picture upload](${attachment.url} "The user pic upload") `;
+        }
+        console.log("Sending send_pic message", msg);
+        this.sendMessage("/send_pic", { displayText: msg });
+        successCb(result);
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+        errorCb(error);
+      })
+    } catch(err) {
+      console.log("Error", err);
+      errorCb(err);
     }
   }
 
@@ -378,6 +414,7 @@ export default class ConnectedChatroom extends Component<
           onToggleChat={this.handleToggleChat}
           onButtonClick={this.handleButtonClick}
           onSendMessage={this.sendMessage}
+          onSendFile={this.sendFile}
           ref={this.chatroomRef}
           voiceLang={this.props.voiceLang}
           disableForm={this.props.disableForm}

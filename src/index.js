@@ -19,6 +19,7 @@ const USERID_STORAGE_KEY = "simple-chatroom-cid";
 
 type ChatroomOptions = {
   host: string,
+  platformHost: string,
   title?: string,
   welcomeMessage?: string,
   speechRecognition?: string,
@@ -72,7 +73,9 @@ window.Chatroom = function(options: ChatroomOptions) {
       rasaToken={options.rasaToken}
       userId={sessionUserId}
       host={options.host}
+      platformHost={options.platformHost}
       definition={parseDefinition(options.definition)}
+      deployment={options.deployment}
       channel={options.channel || "rest"}
       title={options.title || "Chat"}
       speechRecognition={options.speechRecognition}
@@ -104,7 +107,9 @@ window.DebugChatroom = function(options: ChatroomOptions) {
       rasaToken={options.rasaToken}
       userId={sessionUserId}
       host={options.host}
+      platformHost={options.platformHost}
       definition={parseDefinition(options.definition)}
+      deployment={options.deployment}
       channel={options.channel || "rest"}
       title={options.title || "Chat"}
       speechRecognition={options.speechRecognition}

@@ -18,6 +18,9 @@ import { uuidv4 } from "./utils";
 import Message, { MessageTime } from "./Message";
 import SpeechInput from "./SpeechInput";
 
+import { Online, Offline } from "react-detect-offline";
+import { CameraComponent } from "./MediaUpload";
+
 const REDRAW_INTERVAL = 10000;
 const GROUP_INTERVAL = 60000;
 
@@ -89,13 +92,22 @@ type ChatroomProps = {
 };
 
 type ChatroomState = {
-  inputValue: string
+  inputValue: string,
+  showStickerControl: boolean,
+  showCamera: boolean,
+  textInteraction: boolean,
+  disableForm: boolean,
+  showFileProgress: boolean
 };
 
 export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
   state = {
     inputValue: "",
-    showStickerControl: false
+    showStickerControl: false,
+    showCamera: false,
+    textInteraction: false,
+    disableForm: this.props.disableForm,
+    showFileProgress: false
   };
   lastRendered: number = 0;
   chatsRef = React.createRef<HTMLDivElement>();
@@ -104,6 +116,7 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
 
   componentDidMount() {
     this.scrollToBot();
+    this.setState({ showFileProgress: false });
   }
 
   componentDidUpdate(prevProps: ChatroomProps) {
@@ -210,6 +223,10 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
     });
   };
 
+  toggleMessageFocus = (e) => {
+    this.setState({ textInteraction: (e.type === "focus") });
+  }
+
   toggleStickerSelector = () => {
     this.setState({ showStickerControl: !this.state.showStickerControl });
   };
@@ -219,20 +236,51 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
     this.handleButtonClick(e.target.dataset.content, e.target.dataset.content)
   }
 
+  handleConnectionStateChange = (isReconnected) => {
+    if (isReconnected) {
+      setTimeout(() => { window.location.reload() }, 1000);
+    } else {
+      this.setState({ disableForm: true });
+    }
+  }
+
+  handleCameraBtn = () => { this.setState({ showCamera: true }) }
+
+  mediaCaptureCancel = () => {
+    this.setState({ showCamera: false, showFileProgress: false }, () => { this.scrollToBot(); });
+  }
+
+  mediaCaptureDone = (file) => {
+    this.mediaCaptureCancel();
+    this.setState({ disableForm: true, showFileProgress: 'uploading' });
+    const errorCb = (error) => {
+      this.setState({ showFileProgress: 'failed' });
+      setTimeout(()=>{ this.setState({ showFileProgress: false, disableForm: false }); }, 2000);
+    };
+    const successCb = (result) => { this.setState({ showFileProgress: false, disableForm: false }); };
+    this.props.onSendFile([file], successCb, errorCb);
+  }
+
   render() {
     const { messages, isOpen, waitingForBotResponse, voiceLang, disableForm, stickers } = this.props;
     const messageGroups = this.groupMessages(messages);
-    const isClickable = i => !waitingForBotResponse && (i == messageGroups.length - 1); //TODO introduce disableForm into this
+    const isClickable = i => !disableForm && !waitingForBotResponse && (i == messageGroups.length - 1); //TODO introduce disableForm into this
     let isButtonMsg, lastMessage = messages[messages.length-1];
     const hasStickers = ((stickers) && (Object.keys(stickers).length > 0));
     try   { isButtonMsg = ('locate' in lastMessage.message) || (lastMessage.message.buttons.length > 0) }
     catch { isButtonMsg = false; }
+    let klass = "input-controls";
+    if (hasStickers) { klass += " has-stickers"; }
+    if (this.state.showStickerControl) { klass += " show-stickers"; }
+    if (this.state.showCamera) { return (<CameraComponent cancelCb={this.mediaCaptureCancel} doneCb={this.mediaCaptureDone} />) }
 
     return (
       <div className={classnames("project chatroom", isOpen ? "open" : "closed")}>
         <header className="">
           <h1 className="logo">{this.props.definition.title || "chatbot title"}</h1>
+          <Offline onChange={this.handleConnectionStateChange}><div className="connectivity-msg">&#9888; You are offline, waiting to reconnect...</div></Offline>
         </header>
+
         <div className="chats" ref={this.chatsRef}>
           {messageGroups.map((group, i) => (
             <MessageGroup
@@ -245,29 +293,36 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
           ))}
           {waitingForBotResponse ? <WaitingBubble /> : null}
         </div>
-
-        <form autoComplete="off" className={ this.state.showStickerControl ? "input-controls show-stickers" : "input-controls" } disabled={disableForm} onSubmit={this.handleSubmitMessage}>
+        {this.state.showFileProgress === false ? null : (
+          <div className={"file-progress " + this.state.showFileProgress}><span></span></div>
+        )}
+        <form autoComplete="off" className={klass} disabled={disableForm} onSubmit={this.handleSubmitMessage}>
           {hasStickers === true ? (
             <div className="sticker-control" ref={this.stickerSelectorRef} >
               <ul>
               {Object.keys(stickers).map((s, i) => (
-                <li onClick={this.submitSticker} key={i} data-content={":"+s+":"} style={{ backgroundImage: `url(${stickers[s].image})` }}></li>)
+                <li role="button" onClick={this.submitSticker} key={i} data-content={":"+s+":"} style={{ backgroundImage: `url(${stickers[s].image})` }}></li>)
               )}
               </ul>
             </div>
           ) : null }
 
           <div className="main-inputs">
-            {hasStickers === true ? (<button disabled={waitingForBotResponse || isButtonMsg || disableForm} type="button" className="toggle-sticker" onClick={this.toggleStickerSelector} style={{}}></button>) : null}
-            <input
-              disabled={waitingForBotResponse || isButtonMsg || disableForm}
-              type="text"
-              name="message"
-              autoComplete="off"
-              aria-label="Message text input"
-              ref={this.inputRef}
-            />
-            <input type="submit" value="Send" disabled={waitingForBotResponse || isButtonMsg || disableForm} />
+            {hasStickers === true ? (<button aria-label="Sticker selector" disabled={waitingForBotResponse || isButtonMsg || disableForm} type="button" className="toggle-sticker" onClick={this.toggleStickerSelector} style={{}}></button>) : null}
+            <div className="relative">
+              <input
+                disabled={waitingForBotResponse || isButtonMsg || disableForm}
+                type="text"
+                name="message"
+                onFocus={this.toggleMessageFocus}
+                onBlur={this.toggleMessageFocus}
+                autoComplete="off"
+                aria-label="Message text input"
+                ref={this.inputRef}
+              />
+              {this.state.textInteraction === true ? null : (<button disabled={waitingForBotResponse || isButtonMsg || disableForm} aria-label="Open camera" className="media-button" onClick={this.handleCameraBtn}>📷</button>)}
+            </div>
+            <button aria-label="Send message" type="submit" disabled={waitingForBotResponse || isButtonMsg || disableForm}><span className="send-icon"></span></button>
             {this.props.speechRecognition != null ? (
               <SpeechInput
                 disableForm={disableForm}

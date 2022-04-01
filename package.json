@@ -3,6 +3,7 @@
   "version": "0.12.1",
   "license": "AGPL-3.0",
   "dependencies": {
+    "caniuse-lite": "^1.0.30001323",
     "classnames": "^2.2.6",
     "core-js": "^3.9.0",
     "date-fns": "^2.0.1",
@@ -10,9 +11,11 @@
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.2",
     "react": "^16.9.0",
+    "react-detect-offline": "^2.4.5",
     "react-dom": "^16.9.0",
     "react-icons": "^3.2.1",
     "react-markdown": "^3.3.0",
+    "react-webcam": "^7.0.0",
     "remark-breaks": "^1.0.0",
     "unfetch": "^3.0.0"
   },
