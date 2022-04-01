@@ -8,26 +8,6 @@ import type { ChatMessage } from "./Chatroom";
 import { noop, handleShortcodes, getAllUrlParams } from "./utils";
 import Carousel from "./Carousel";
 
-const localMap = {
-  "top":55.96995573846374,
-  "left":-3.168182373046875,
-  "bottom":55.96150096848813,
-  "right":-3.15032958984375,
-  "latPixel":3.0024041106559784e-06,
-  "lngPixel":5.364418029785156e-06,
-  "backgroundImage": 'url("/assets/local-map.png"), url("/static/jupiter/assets/local-map.png")'
-}
-
-const jupiterMap = {
-  "top":55.90842435462327,
-  "left":-3.431854248046875,
-  "bottom":55.89995614406813,
-  "right":-3.41400146484375,
-  "latPixel":3.007177043730002e-06,
-  "lngPixel":5.364418029785156e-06,
-  "backgroundImage": 'url("/assets/jupiter-map.png"), url("/static/jupiter/assets/jupiter-map.png")'
-}
-
 type MessageTimeProps = {
   time: number,
   isBot: boolean
@@ -241,18 +221,17 @@ const Message = React.memo(({ chat, onButtonClick, voiceLang = null, stickers = 
         return ((lng >= mapDetails.left) && (lng <= mapDetails.right)) && ((lat <= mapDetails.top) && (lat >= mapDetails.bottom));
       }
 
-      const styleBackground = (urlParams) => {
+      const styleBackground = (urlParams, localMap) => {
         if ((urlParams.mlat === undefined) && (urlParams.mlon === undefined)) { return {}; }
 
         const lat = Number(urlParams.mlat);
         const lng = Number(urlParams.mlon);
 
         let mapDetails = {};
+        if (!localMap){ localMap = {} }
 
         if (isWithinBounds(lat, lng, localMap)) {
           mapDetails = localMap;
-        } else if (isWithinBounds(lat, lng, jupiterMap)) {
-          mapDetails = jupiterMap;
         } else {
           return {}
         }
