@@ -165,15 +165,9 @@ export default class ConnectedChatroom extends Component<
     try {
       const deployment = this.props.deployment.deployment;
       const formData = new FormData();
-
-      console.log("deployment", deployment)
       formData.append('deployment', deployment);
       for (const file of files) {console.log("f", file);  formData.append('files',file); }
       const attachmentUrl = `${this.props.platformHost}/api/v1/eventlogs/${this.props.userId}/attachments/`;
-
-      console.log("Sending file", attachmentUrl);
-      console.log("with formData", formData);
-
       fetch(attachmentUrl, { method: 'POST', body: formData })
       .then((response) => response.json())
       .then((result) => {
@@ -181,7 +175,6 @@ export default class ConnectedChatroom extends Component<
         for (const attachment of result.data){
           msg = msg += `![User picture upload](${attachment.url} "The user pic upload") `;
         }
-        console.log("Sending send_pic message", msg);
         this.sendMessage("/send_pic", { displayText: msg });
         successCb(result);
       })

@@ -140,6 +140,8 @@ body {
 header, .project.chatroom, .chatroom, input, button { font-family: "Nunito Sans", sans-serif; }
 
 .relative { position: relative; }
+.no-border { border: none; }
+.hide { display: none; }
 
 .connectivity-msg {
   padding: 0.3rem; text-align: center; background: black; color: white;
@@ -390,9 +392,13 @@ header, .project.chatroom, .chatroom, input, button { font-family: "Nunito Sans"
 
   .input-controls {
 
-    &.show-stickers {
-      .main-inputs {
-        grid-template-columns: 1fr 5fr 2fr;
+    &.media-controls-active {
+      input[type="text"] { border: none; opacity: 0.5; }
+
+      div.media-controls {
+        padding-left: 0.5rem;
+        background-color: $grey;
+        box-shadow: 0px 0px 15px #cfcaca;
       }
     }
 
@@ -411,9 +417,7 @@ header, .project.chatroom, .chatroom, input, button { font-family: "Nunito Sans"
 
     input[type="text"]:disabled,
     input[type="submit"]:disabled,
-    input:disabled, button:disabled {
-      opacity: 0.4;
-    }
+    input:disabled, button:disabled { opacity: 0.4; }
 
     input[type="text"], input[type="submit"] {
       padding: 0.5em 0em;
@@ -490,8 +494,12 @@ header, .project.chatroom, .chatroom, input, button { font-family: "Nunito Sans"
     }
   }
 
-  .vertical-center {
-    vertical-align: middle;
+  .vertical-center { vertical-align: middle; }
+
+  &.show-stickers {
+    .main-inputs {
+      grid-template-columns: 1fr 5fr 2fr;
+    }
   }
 }
 
@@ -1094,27 +1102,60 @@ div.project.chatroom {
     }
   }
 
-  button.media-button {
-    width: $controlHeight;
-    height: $controlHeight;
+  div.media-controls {
     position: absolute;
-    right: 0.5rem;
-    height: 2.8rem;
-    width: 2.8rem;
-    border-radius: 2.5rem;
-    margin-top: 0.1rem;
-    margin-right: 0.2rem;
-    background-image: url("data:image/svg+xml,%3Csvg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='camera' class='svg-inline--fa fa-camera fa-w-16' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='currentColor' d='M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z'/%3E%3C/svg%3E");
-    background-size: 65%;
-    background-repeat: no-repeat;
-    color: transparent;
-    background-position: center;
-    opacity: 0.5;
-    box-shadow: 0px 0px 0px gray;
-    border: none;
-    &:hover { cursor: pointer; opacity: 0.8; border: 1px solid transparent; }
-  }
+    right: 2px;
+    top: 0px;
+    border-radius: 1rem;
 
+    button.file-button, button.media-button, button.camera-button {
+      width: $controlHeight;
+      height: $controlHeight;
+      font-size: 2rem;
+      position: relative;
+      border-radius: 2.5rem;
+      margin-right: 10px;
+      background-size: 65%;
+      background-repeat: no-repeat;
+      color: transparent;
+      background-position: center;
+      opacity: 0.5;
+      box-shadow: 0px 0px 0px gray;
+      border: none;
+      &:hover { cursor: pointer; opacity: 0.8; border: 1px solid transparent; }
+    }
+
+    button.media-button {
+      background: transparent;
+      opacity: 0.8;
+      color: black;
+    }
+
+    button.media-button:hover {
+      opacity: 1;
+      background-color: white;
+      box-shadow: 0px 0px 13px 13px white;
+    }
+
+    button.media-button.close-media {
+      transform: rotate(90deg);
+      opacity: 0.6;
+    }
+
+    button.media-button.close-media:hover {
+      opacity: 0.8;
+      box-shadow: none;
+      background-color: transparent;
+    }
+
+    button.camera-button {
+      background-image: url("data:image/svg+xml,%3Csvg aria-hidden='true' focusable='false' data-prefix='fas' data-icon='camera' class='svg-inline--fa fa-camera fa-w-16' role='img' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='currentColor' d='M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z'/%3E%3C/svg%3E");
+    }
+
+    button.file-button {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3C!-- Font Awesome Pro 5.15.4 by %40fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --%3E%3Cpath d='M464 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h416c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM112 120c-30.928 0-56 25.072-56 56s25.072 56 56 56 56-25.072 56-56-25.072-56-56-56zM64 384h384V272l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L208 320l-55.515-55.515c-4.686-4.686-12.284-4.686-16.971 0L64 336v48z'/%3E%3C/svg%3E");
+    }
+  }
 
   button[type="submit"], input[type="text"], input[type="submit"] {
     font-size: 1rem;

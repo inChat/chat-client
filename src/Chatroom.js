@@ -107,12 +107,14 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
     showCamera: false,
     textInteraction: false,
     disableForm: this.props.disableForm,
-    showFileProgress: false
+    showFileProgress: false,
+    showMediaButtons: false
   };
   lastRendered: number = 0;
   chatsRef = React.createRef<HTMLDivElement>();
   inputRef = React.createRef<HTMLInputElement>();
   stickerSelectorRef = React.createRef<HTMLDivElement>();
+  fileInputRef=React.createRef<HTMLInputElement>();
 
   componentDidMount() {
     this.scrollToBot();
@@ -121,7 +123,7 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
 
   componentDidUpdate(prevProps: ChatroomProps) {
     if (!isEqual(prevProps.messages, this.props.messages)) {
-      this.scrollToBot();
+      this.scrollToBot()
     }
     if (!prevProps.isOpen && this.props.isOpen) {
       this.focusInput();
@@ -135,6 +137,12 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
       !isEqual(nextState, this.state) ||
       Date.now() > this.lastRendered + REDRAW_INTERVAL
     );
+  }
+
+  getFileInputRef(): HTMLInputElement {
+    const { fileInputRef } = this;
+    if (fileInputRef.current == null) throw new TypeError("fileInputRef is null.");
+    return ((fileInputRef.current: any): HTMLInputElement);
   }
 
   getInputRef(): HTMLInputElement {
@@ -156,7 +164,13 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
   }
 
   scrollToBot() {
-    this.getChatsRef().scrollTop = this.getChatsRef().scrollHeight;
+    const images = Array.from(this.chatsRef.current.querySelectorAll("img"));
+    const image = images.length ? images[images.length-1] : undefined;
+    if (image && !image.complete) {
+      image.addEventListener("load", () => { this.getChatsRef().scrollTop = this.getChatsRef().scrollHeight; }, { once: true });
+    } else {
+      this.getChatsRef().scrollTop = this.getChatsRef().scrollHeight;
+    }
   }
 
   focusInput() {
@@ -169,7 +183,7 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
     }
     const message = this.getInputRef().value.trim();
     this.props.onSendMessage(message);
-    this.setState({ inputValue: "" });
+    this.setState({ inputValue: "", showMediaButtons: false });
     this.getInputRef().value = "";
   };
 
@@ -224,7 +238,11 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
   };
 
   toggleMessageFocus = (e) => {
-    this.setState({ textInteraction: (e.type === "focus") });
+    const isTextInteraction = (e.type === "focus");
+    this.setState({
+      textInteraction: isTextInteraction,
+      showMediaButtons: (this.state.showMediaButtons && !isTextInteraction)
+    });
   }
 
   toggleStickerSelector = () => {
@@ -244,6 +262,10 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
     }
   }
 
+  handleMediaBtn = () => {
+    this.setState({ showMediaButtons: !this.state.showMediaButtons })
+  }
+
   handleCameraBtn = () => { this.setState({ showCamera: true }) }
 
   mediaCaptureCancel = () => {
@@ -257,21 +279,49 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
       this.setState({ showFileProgress: 'failed' });
       setTimeout(()=>{ this.setState({ showFileProgress: false, disableForm: false }); }, 2000);
     };
-    const successCb = (result) => { this.setState({ showFileProgress: false, disableForm: false }); };
+    const successCb = (result) => {
+      this.setState({ showFileProgress: false, disableForm: false, showMediaButtons: false },
+        () => { this.scrollToBot();
+      });
+    };
     this.props.onSendFile([file], successCb, errorCb);
+  }
+
+  handleFileBtn = (e) => {
+    e.preventDefault();
+    this.getFileInputRef().click();
+  }
+
+  handleFileSelect = (e) => {
+    this.setState({ disableForm: true, showFileProgress: 'uploading' });
+    const errorCb = (error) => {
+      this.setState({ showFileProgress: 'failed' });
+      setTimeout(()=>{ this.setState({ showFileProgress: false, disableForm: false }); }, 2000);
+    };
+    const successCb = (result) => {
+      this.setState({ showFileProgress: false, disableForm: false, showMediaButtons: false },
+        () => { this.scrollToBot();
+      });
+    };
+    if (e.target.files.length > 1) { console.error("more than 1 file selected - multiple file handling not implemented"); }
+    if (e.target.files.length > 0) {
+      console.log(`${e.target.files.length} file(s) selected, uploading`);
+      this.props.onSendFile([e.target.files[0]], successCb, errorCb);
+    }
   }
 
   render() {
     const { messages, isOpen, waitingForBotResponse, voiceLang, disableForm, stickers } = this.props;
     const messageGroups = this.groupMessages(messages);
     const isClickable = i => !disableForm && !waitingForBotResponse && (i == messageGroups.length - 1); //TODO introduce disableForm into this
-    let isButtonMsg, lastMessage = messages[messages.length-1];
     const hasStickers = ((stickers) && (Object.keys(stickers).length > 0));
+    let isButtonMsg, lastMessage = messages[messages.length-1];
     try   { isButtonMsg = ('locate' in lastMessage.message) || (lastMessage.message.buttons.length > 0) }
     catch { isButtonMsg = false; }
     let klass = "input-controls";
     if (hasStickers) { klass += " has-stickers"; }
     if (this.state.showStickerControl) { klass += " show-stickers"; }
+    if (this.state.showMediaButtons === true) { klass += " media-controls-active"; }
     if (this.state.showCamera) { return (<CameraComponent cancelCb={this.mediaCaptureCancel} doneCb={this.mediaCaptureDone} />) }
 
     return (
@@ -297,6 +347,8 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
           <div className={"file-progress " + this.state.showFileProgress}><span></span></div>
         )}
         <form autoComplete="off" className={klass} disabled={disableForm} onSubmit={this.handleSubmitMessage}>
+          <input accept="image/*" type="file" className="hide" onChange={this.handleFileSelect} ref={this.fileInputRef} />
+
           {hasStickers === true ? (
             <div className="sticker-control" ref={this.stickerSelectorRef} >
               <ul>
@@ -320,7 +372,12 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
                 aria-label="Message text input"
                 ref={this.inputRef}
               />
-              {this.state.textInteraction === true ? null : (<button disabled={waitingForBotResponse || isButtonMsg || disableForm} aria-label="Open camera" className="media-button" onClick={this.handleCameraBtn}>📷</button>)}
+
+              <div className={classnames("media-controls", this.state.textInteraction === true ? "hide" : "")}>
+                {!this.state.showMediaButtons ? null : (<button disabled={waitingForBotResponse || isButtonMsg || disableForm} aria-label="Upload a file" className="file-button" onClick={this.handleFileBtn}>🖼️</button>)}
+                {!this.state.showMediaButtons ? null : (<button disabled={waitingForBotResponse || isButtonMsg || disableForm} aria-label="Open camera" className="camera-button" onClick={this.handleCameraBtn}>📷</button>)}
+                {this.state.textInteraction ? null : (<button disabled={waitingForBotResponse || isButtonMsg || disableForm} aria-label="Open media buttons" className={classnames("media-button", this.state.showMediaButtons ? "close-media" : "open-media")} type="reset" onClick={this.handleMediaBtn}>📎</button>)}
+              </div>
             </div>
             <button aria-label="Send message" type="submit" disabled={waitingForBotResponse || isButtonMsg || disableForm}><span className="send-icon"></span></button>
             {this.props.speechRecognition != null ? (
