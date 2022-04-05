@@ -48,7 +48,7 @@ class DebuggerView extends Component<DebuggerViewProps, DebuggerViewState> {
   chatroomRef = React.createRef<ConnectedChatroom>();
 
   componentDidMount() {
-    this.intervalHandle = window.setInterval(this.updateTrackerView, 1000);
+    this.intervalHandle = window.setInterval(this.updateTrackerView, 3000);
     this.getChatroom().setState({ isOpen: true });
   }
 
