@@ -42,13 +42,20 @@ export class CameraComponent extends Component {
     this.videoType = "video/webm";
     this.videoExtension = ".webm";
 
-    if (!MediaRecorder.isTypeSupported(this.videoType)) {
-      this.videoType = "video/mpeg";
-      this.videoExtension = ".mpeg";
-    }
-    if (this.props.videoMode) {
-      this.captureCb = this.onTakeVideo;
-    } else {
+    try {
+      if (!MediaRecorder.isTypeSupported(this.videoType)) {
+        this.videoType = "video/mpeg";
+        this.videoExtension = ".mpeg";
+      }
+      if (this.props.videoMode) {
+        this.captureCb = this.onTakeVideo;
+      } else {
+        this.captureCb = this.onTakePhoto;
+      }
+    } catch(err) {
+      console.error(err)
+      console.error("Likely MediaRecorder not supported for video ... defaulting to picture mode")
+      this.props.videoMode = false;
       this.captureCb = this.onTakePhoto;
     }
   }
@@ -60,8 +67,8 @@ export class CameraComponent extends Component {
     this.props.cancelCb();
   }
 
-  done() {
-    this.props.doneCb(); //TODO: add button to ok result, and return file or data
+  done(file) {
+    this.props.doneCb(file); //TODO: add button to ok result, and return file or data
   }
 
   onTakeVideo() {
@@ -70,16 +77,16 @@ export class CameraComponent extends Component {
       this.mediaRecorder.stop();
     } else {
       let recordedChunks = [];
-      this.mediaRecorder = new MediaRecorder(this.webcam.stream, { mimeType: this.videoType });
+      this.mediaRecorder = new MediaRecorder(this.webcam.stream, { mimeType: this.videoType }); //TODO fix for incompatible with MediaRecorder
       this.mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           recordedChunks.push(event.data);
           var videoBlob = new Blob(recordedChunks, { type: this.videoType });
           var file = new File([videoBlob], "cameraCapture" + this.videoExtension, { type: this.videoType, lastModified: new Date() })
-          this.props.doneCb(file);
+          this.done(file);
         } else {
           logger.error("No data available to produce video");
-          this.props.cancelCb();
+          this.cancel();
         }
       }
       this.mediaRecorder.start();
@@ -90,7 +97,7 @@ export class CameraComponent extends Component {
     const shot64 = this.webcam.getScreenshot();
     var shotBlob = dataURItoBlob(shot64);
     var file = new File([shotBlob], "cameraCapture.png", { type: "image/png", lastModified: new Date() });
-    this.props.doneCb(file);
+    this.done(file);
   }
 
   cameraSwap() {

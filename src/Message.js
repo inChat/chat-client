@@ -10,21 +10,27 @@ import Carousel from "./Carousel";
 
 type MessageTimeProps = {
   time: number,
-  isBot: boolean
+  isBot: boolean,
+  styling: Object
 };
 
-export const MessageTime = ({ time, isBot }: MessageTimeProps) => {
+export const MessageTime = ({ time, isBot, styling }: MessageTimeProps) => {
   if (time === 0) return null;
 
   const messageTime = Math.min(Date.now(), time);
   const messageTimeObj = new Date(messageTime);
+  let avatarBg = {};
+  if (styling && styling["avatar-background"] && Object.keys(styling["avatar-background"])){
+    avatarBg = styling["avatar-background"];
+  }
+  //console.debug("styling", styling, "avatarBg", avatarBg);
   return (
     <React.Fragment>
     <li
       className={classnames("time", isBot ? "left" : "right")}
       title={messageTimeObj.toISOString()}
     >
-      { isBot ? (<span className="bot-avatar"></span>) : (null) }
+      { isBot ? (<span className="bot-avatar" style={avatarBg}></span>) : (null) }
       <span className="sent"> Sent {formatDistance(messageTimeObj, Date.now())} ago</span>
     </li>
     </React.Fragment>

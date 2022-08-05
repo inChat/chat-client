@@ -54,7 +54,7 @@ const WaitingBubble = () => (
   </li>
 );
 
-const MessageGroup = ({ messages, onButtonClick, voiceLang, stickers }) => {
+const MessageGroup = ({ messages, onButtonClick, voiceLang, definition }) => {
   const isBot = messages[0].username === "bot";
   const isButtonGroup =
     messages.length === 1 && messages[0].message.type === "button";
@@ -66,11 +66,11 @@ const MessageGroup = ({ messages, onButtonClick, voiceLang, stickers }) => {
           key={i}
           onButtonClick={onButtonClick}
           voiceLang={voiceLang}
-          stickers={stickers}
+          stickers={definition.stickers}
         />
       ))}
       {!isButtonGroup ? (
-        <MessageTime time={messages[messages.length - 1].time} isBot={isBot} />
+        <MessageTime time={messages[messages.length - 1].time} isBot={isBot} styling={definition.styling} />
       ) : null}
     </Fragment>
   );
@@ -87,8 +87,7 @@ type ChatroomProps = {
   onSendMessage: (message: string) => *,
   onToggleChat: () => *,
   voiceLang: ?string,
-  disableForm?: boolean,
-  stickers?: Object
+  disableForm?: boolean
 };
 
 type ChatroomState = {
@@ -311,10 +310,10 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
   }
 
   render() {
-    const { messages, isOpen, waitingForBotResponse, voiceLang, disableForm, stickers } = this.props;
+    const { messages, isOpen, waitingForBotResponse, voiceLang, disableForm, definition } = this.props;
     const messageGroups = this.groupMessages(messages);
     const isClickable = i => !disableForm && !waitingForBotResponse && (i == messageGroups.length - 1); //TODO introduce disableForm into this
-    const hasStickers = ((stickers) && (Object.keys(stickers).length > 0));
+    const hasStickers = ((definition.stickers) && (Object.keys(definition.stickers).length > 0));
     let isButtonMsg, lastMessage = messages[messages.length-1];
     try   { isButtonMsg = ('locate' in lastMessage.message) || (lastMessage.message.buttons.length > 0) }
     catch { isButtonMsg = false; }
@@ -338,7 +337,7 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
               key={i}
               onButtonClick={ isClickable(i) ? this.handleButtonClick : undefined }
               voiceLang={voiceLang}
-              stickers={stickers}
+              definition={definition}
             />
           ))}
           {waitingForBotResponse ? <WaitingBubble /> : null}
@@ -352,8 +351,8 @@ export default class Chatroom extends Component<ChatroomProps, ChatroomState> {
           {hasStickers === true ? (
             <div className="sticker-control" ref={this.stickerSelectorRef} >
               <ul>
-              {Object.keys(stickers).map((s, i) => (
-                <li role="button" onClick={this.submitSticker} key={i} data-content={":"+s+":"} style={{ backgroundImage: `url(${stickers[s].image})` }}></li>)
+              {Object.keys(definition.stickers).map((s, i) => (
+                <li role="button" onClick={this.submitSticker} key={i} data-content={":"+s+":"} style={{ backgroundImage: `url(${definition.stickers[s].image})` }}></li>)
               )}
               </ul>
             </div>

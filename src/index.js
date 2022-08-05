@@ -57,7 +57,8 @@ const determineSession = () => {
 const parseDefinition = (definition) => {
   const defaults = {
     'styling': {
-      'splash-background': '#ae1f24'//,
+      'splash-background': '#ae1f24',
+      //'avatar-background': {}//,
       //'splash-logo': "https://college-bridge.org/wp-content/uploads/2019/02/Reverse-logo.png"
     }
   };
