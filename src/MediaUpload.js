@@ -30,7 +30,7 @@ export class CameraComponent extends Component {
       videoConstraints: {
         width: 1280,
         height: 720,
-        facingMode: "environment"
+        facingMode: "user"
       }
     };
     this.mediaRecorder = undefined;
@@ -101,11 +101,17 @@ export class CameraComponent extends Component {
   }
 
   cameraSwap() {
-    if (this.state.videoConstraints.facingMode === "user") {
-      this.setState(Object.assign(this.state.videoConstraints, { facingMode: { exact: "environment" } }));
-    } else {
-      this.setState(Object.assign(this.state.videoConstraints, { facingMode: "user" }));
-    }
+    let faceMode = undefined;
+    if (this.state.videoConstraints.facingMode === "environment") { faceMode = "user"; } else { faceMode = "environment"; }
+
+    this.setState(prevState => ({
+      videoConstraints: {
+        ...prevState.videoConstraints,
+        facingMode: faceMode
+      }
+    }))
+
+    console.debug("videoConstraints", this.state.videoConstraints);
   };
 
   render() {
